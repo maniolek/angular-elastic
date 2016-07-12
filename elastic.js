@@ -135,40 +135,42 @@ angular.module('monospaced.elastic', [])
 
             // active flag prevents actions in function from calling adjust again
             if (!active) {
-              active = true;
-
-              mirror.value = ta.value + append; // optional whitespace to improve animation
-              mirror.style.overflowY = ta.style.overflowY;
-
-              taHeight = ta.style.height === '' ? 'auto' : parseInt(ta.style.height, 10);
-
-              taComputedStyleWidth = getComputedStyle(ta).getPropertyValue('width');
-
-              // ensure getComputedStyle has returned a readable 'used value' pixel width
-              if (taComputedStyleWidth.substr(taComputedStyleWidth.length - 2, 2) === 'px') {
-                // update mirror width in case the textarea width has changed
-                width = parseInt(taComputedStyleWidth, 10) - boxOuter.width;
-                mirror.style.width = width + 'px';
-              }
-
-              mirrorHeight = mirror.scrollHeight;
-
-              if (mirrorHeight > maxHeight) {
-                mirrorHeight = maxHeight;
-                overflow = 'scroll';
-              } else if (mirrorHeight < minHeight) {
-                mirrorHeight = minHeight;
-              }
-              mirrorHeight += boxOuter.height;
-              ta.style.overflowY = overflow || 'hidden';
-
-              if (taHeight !== mirrorHeight) {
-                scope.$emit('elastic:resize', $ta, taHeight, mirrorHeight);
-                ta.style.height = mirrorHeight + 'px';
-              }
 
               // small delay to prevent an infinite loop
               $timeout(function() {
+
+                active = true;
+
+                mirror.value = ta.value + append; // optional whitespace to improve animation
+                mirror.style.overflowY = ta.style.overflowY;
+
+                taHeight = ta.style.height === '' ? 'auto' : parseInt(ta.style.height, 10);
+
+                taComputedStyleWidth = getComputedStyle(ta).getPropertyValue('width');
+
+                // ensure getComputedStyle has returned a readable 'used value' pixel width
+                if (taComputedStyleWidth.substr(taComputedStyleWidth.length - 2, 2) === 'px') {
+                  // update mirror width in case the textarea width has changed
+                  width = parseInt(taComputedStyleWidth, 10) - boxOuter.width;
+                  mirror.style.width = width + 'px';
+                }
+
+                mirrorHeight = mirror.scrollHeight;
+
+                if (mirrorHeight > maxHeight) {
+                  mirrorHeight = maxHeight;
+                  overflow = 'scroll';
+                } else if (mirrorHeight < minHeight) {
+                  mirrorHeight = minHeight;
+                }
+                mirrorHeight += boxOuter.height;
+                ta.style.overflowY = overflow || 'hidden';
+
+                if (taHeight !== mirrorHeight) {
+                  scope.$emit('elastic:resize', $ta, taHeight, mirrorHeight);
+                  ta.style.height = mirrorHeight + 'px';
+                }
+
                 active = false;
               }, 1, false);
 
